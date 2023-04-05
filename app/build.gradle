@@ -7,9 +7,13 @@ android {
     namespace 'org.android.go.sopt'
     compileSdk 33
 
+    buildFeatures {
+        viewBinding = true
+    }
+
     defaultConfig {
         applicationId "org.android.go.sopt"
-        minSdk 28
+        minSdk 24
         targetSdk 32
         versionCode 1
         versionName "1.0"
