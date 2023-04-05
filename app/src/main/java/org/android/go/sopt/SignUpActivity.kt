@@ -36,7 +36,6 @@ class SignUpActivity : AppCompatActivity() {
                 intent.putExtra("password", binding.etSignupPassword.text.toString())
                 intent.putExtra("name", binding.etSignupName.text.toString())
                 intent.putExtra("specialty", binding.etSignupSpecialty.text.toString())
-                Snackbar.make(binding.root, "회원 가입이 완료되었습니다!", Snackbar.LENGTH_SHORT).show()
                 setResult(RESULT_OK, intent)
                 finish()
             }

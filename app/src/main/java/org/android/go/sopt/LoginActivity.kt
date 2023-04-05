@@ -7,6 +7,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import com.google.android.material.snackbar.Snackbar
 import org.android.go.sopt.databinding.ActivityLoginBinding
 
 class LoginActivity : AppCompatActivity() {
@@ -55,7 +56,7 @@ class LoginActivity : AppCompatActivity() {
             password = result.data?.getStringExtra("password").toString()
             name = result.data?.getStringExtra("name").toString()
             specialty = result.data?.getStringExtra("specialty").toString()
-            Log.d("id", id)
+            Snackbar.make(binding.root, "회원 가입이 완료되었습니다!", Snackbar.LENGTH_SHORT).show()
         }
     }
 }
