@@ -5,7 +5,6 @@ import android.os.Bundle
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.snackbar.Snackbar
 import org.android.go.sopt.R
 import org.android.go.sopt.main.MainActivity
 import org.android.go.sopt.signup.SignUpActivity
@@ -13,6 +12,7 @@ import org.android.go.sopt.databinding.ActivityLoginBinding
 import org.android.go.sopt.util.hideKeyboard
 import org.android.go.sopt.util.showShortSnackbar
 import org.android.go.sopt.util.showShortToast
+
 
 class LoginActivity : AppCompatActivity() {
 
