@@ -100,7 +100,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="@string/sign_up_specialty_hint"
-        android:imeOptions="actionNext"
+        android:imeOptions="actionDone"
         android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
