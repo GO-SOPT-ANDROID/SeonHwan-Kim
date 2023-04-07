@@ -1,9 +1,9 @@
-package org.android.go.sopt
+package org.android.go.sopt.main
 
-import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import org.android.go.sopt.databinding.ActivityMainBinding
+
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
