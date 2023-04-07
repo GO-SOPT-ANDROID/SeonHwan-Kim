@@ -1,14 +1,18 @@
-package org.android.go.sopt
+package org.android.go.sopt.login
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
+import org.android.go.sopt.R
+import org.android.go.sopt.main.MainActivity
+import org.android.go.sopt.signup.SignUpActivity
 import org.android.go.sopt.databinding.ActivityLoginBinding
+import org.android.go.sopt.util.hideKeyboard
+import org.android.go.sopt.util.showShortSnackbar
+import org.android.go.sopt.util.showShortToast
 
 class LoginActivity : AppCompatActivity() {
 
@@ -23,20 +27,24 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.root.setOnClickListener {
+            hideKeyboard(binding.root)
+        }
+
         this.onClickLogin()
         this.onCLickSignUp()
     }
 
     private fun onClickLogin() {
         binding.btMainLogin.setOnClickListener {
-            if(id == binding.etMainId.text.toString() && password == binding.etMainPassword.text.toString()){
+            if (id == binding.etMainId.text.toString() && password == binding.etMainPassword.text.toString()) {
                 val intent = Intent(this, MainActivity::class.java)
                 intent.putExtra("name", name)
                 intent.putExtra("specialty", specialty)
                 startActivity(intent)
-                Toast.makeText(this, "로그인에 성공했습니다.", Toast.LENGTH_SHORT).show()
-            } else{
-                Toast.makeText(this, "아이디 또는 비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show()
+                showShortToast(getString(R.string.login_success_login_msg))
+            } else {
+                showShortToast(getString(R.string.login_fail_login_msg))
             }
         }
     }
@@ -50,13 +58,13 @@ class LoginActivity : AppCompatActivity() {
 
     private val getResultSignUp = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
-    ){ result: ActivityResult ->
-        if(result.resultCode == RESULT_OK){
-            id = result.data?.getStringExtra("id").toString()
-            password = result.data?.getStringExtra("password").toString()
-            name = result.data?.getStringExtra("name").toString()
-            specialty = result.data?.getStringExtra("specialty").toString()
-            Snackbar.make(binding.root, "회원 가입이 완료되었습니다!", Snackbar.LENGTH_SHORT).show()
+    ) { result: ActivityResult ->
+        if (result.resultCode == RESULT_OK) {
+            id = result.data?.getStringExtra("id") ?: ""
+            password = result.data?.getStringExtra("password") ?: ""
+            name = result.data?.getStringExtra("name") ?: ""
+            specialty = result.data?.getStringExtra("specialty") ?: ""
+            showShortSnackbar(binding.root, getString(R.string.login_success_sign_up_msg))
         }
     }
 }
