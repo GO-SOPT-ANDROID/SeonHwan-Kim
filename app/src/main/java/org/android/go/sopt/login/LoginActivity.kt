@@ -41,6 +41,8 @@ class LoginActivity : AppCompatActivity() {
                 val intent = Intent(this, MainActivity::class.java)
                 intent.putExtra("name", name)
                 intent.putExtra("specialty", specialty)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent)
                 showShortToast(getString(R.string.login_success_login_msg))
             } else {
