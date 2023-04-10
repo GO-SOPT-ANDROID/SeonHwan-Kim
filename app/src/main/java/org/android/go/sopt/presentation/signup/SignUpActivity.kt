@@ -1,4 +1,4 @@
-package org.android.go.sopt.signup
+package org.android.go.sopt.presentation.signup
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.widget.Toast
 import org.android.go.sopt.R
 import org.android.go.sopt.databinding.ActivitySignUpBinding
-import org.android.go.sopt.login.LoginActivity
+import org.android.go.sopt.presentation.login.LoginActivity
 import org.android.go.sopt.util.hideKeyboard
 import org.android.go.sopt.util.showShortToast
 
