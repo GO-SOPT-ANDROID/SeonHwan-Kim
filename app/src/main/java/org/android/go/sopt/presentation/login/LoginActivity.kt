@@ -36,14 +36,14 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun onClickLogin() {
-        with(binding){
-        btMainLogin.setOnClickListener {
-                if (user?.id == etMainId.text.toString() && user?.password == etMainPassword.text.toString()) {
+        with(binding) {
+            btMainLogin.setOnClickListener {
+                if (user !== null && user?.id == etMainId.text.toString() && user?.password == etMainPassword.text.toString()) {
                     val intent = Intent(this@LoginActivity, MainActivity::class.java)
                     intent.putExtra("user", user)
                     startActivity(intent)
                     showShortToast(getString(R.string.login_success_login_msg))
-                    if(!isFinishing) finish()
+                    if (!isFinishing) finish()
                 } else {
                     showShortToast(getString(R.string.login_fail_login_msg))
                 }
@@ -56,9 +56,9 @@ class LoginActivity : AppCompatActivity() {
         ActivityResultContracts.StartActivityForResult()
     ) { result: ActivityResult ->
         if (result.resultCode == RESULT_OK) {
-            user = if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
+            user = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 result.data?.getParcelableExtra("user", User::class.java)
-            } else{
+            } else {
                 result.data?.getParcelableExtra("user")
             }
             Log.d("user", "---------\n$user")
