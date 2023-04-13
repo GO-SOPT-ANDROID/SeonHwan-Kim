@@ -7,6 +7,7 @@ import org.android.go.sopt.R
 import org.android.go.sopt.data.User
 import org.android.go.sopt.databinding.ActivitySignUpBinding
 import org.android.go.sopt.presentation.login.LoginActivity
+import org.android.go.sopt.util.IntentKey
 import org.android.go.sopt.util.hideKeyboard
 import org.android.go.sopt.util.showShortToast
 
@@ -44,15 +45,17 @@ class SignUpActivity : AppCompatActivity() {
                     showShortToast(getString(R.string.sign_up_specialty_err_msg))
                 } else {
                     val intent = Intent(this@SignUpActivity, LoginActivity::class.java)
-                    intent.putExtra("user",User(
-                        id.toString(),
-                        password.toString(),
-                        name.toString(),
-                        specialty.toString()
-                    ))
+                    intent.putExtra(
+                        IntentKey.USER_DATA, User(
+                            id.toString(),
+                            password.toString(),
+                            name.toString(),
+                            specialty.toString()
+                        )
+                    )
                     setResult(RESULT_OK, intent)
                     // 만약 종료가 되지 않았다면 종료시키기
-                    if(!isFinishing) finish()
+                    if (!isFinishing) finish()
                 }
             }
         }

@@ -10,6 +10,8 @@ import org.android.go.sopt.R
 import org.android.go.sopt.SearchFragment
 import org.android.go.sopt.data.User
 import org.android.go.sopt.databinding.ActivityMainBinding
+import org.android.go.sopt.util.IntentKey
+import org.android.go.sopt.util.getParcelable
 
 
 class MainActivity : AppCompatActivity() {
@@ -45,11 +47,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getUserData() {
-        val user: User? = if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
-            intent.getParcelableExtra("user", User::class.java)
-        } else{
-            intent.getParcelableExtra("user")
-        }
+        val user: User? = intent.getParcelable(IntentKey.USER_DATA, User::class.java)
         binding.tvMainName.text = "이름 : ${user?.name}"
         binding.tvMainSpecialty.text = "특기 : ${user?.specialty}"
     }

@@ -12,9 +12,7 @@ import org.android.go.sopt.data.User
 import org.android.go.sopt.presentation.main.MainActivity
 import org.android.go.sopt.presentation.signup.SignUpActivity
 import org.android.go.sopt.databinding.ActivityLoginBinding
-import org.android.go.sopt.util.hideKeyboard
-import org.android.go.sopt.util.showShortSnackbar
-import org.android.go.sopt.util.showShortToast
+import org.android.go.sopt.util.*
 
 
 class LoginActivity : AppCompatActivity() {
@@ -40,7 +38,7 @@ class LoginActivity : AppCompatActivity() {
             btMainLogin.setOnClickListener {
                 if (user !== null && user?.id == etMainId.text.toString() && user?.password == etMainPassword.text.toString()) {
                     val intent = Intent(this@LoginActivity, MainActivity::class.java)
-                    intent.putExtra("user", user)
+                    intent.putExtra(IntentKey.USER_DATA, user)
                     startActivity(intent)
                     showShortToast(getString(R.string.login_success_login_msg))
                     if (!isFinishing) finish()
@@ -56,11 +54,7 @@ class LoginActivity : AppCompatActivity() {
         ActivityResultContracts.StartActivityForResult()
     ) { result: ActivityResult ->
         if (result.resultCode == RESULT_OK) {
-            user = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                result.data?.getParcelableExtra("user", User::class.java)
-            } else {
-                result.data?.getParcelableExtra("user")
-            }
+            user = result.data?.getParcelable(IntentKey.USER_DATA, User::class.java)
             Log.d("user", "---------\n$user")
             showShortSnackbar(binding.root, getString(R.string.login_success_sign_up_msg))
         }

@@ -9,4 +9,4 @@ data class User(
     val password: String? = "",
     val name: String? = "",
     val specialty: String? = "",
-): Parcelable
+) : Parcelable
