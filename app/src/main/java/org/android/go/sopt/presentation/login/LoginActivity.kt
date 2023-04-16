@@ -1,0 +1,106 @@
+package org.android.go.sopt.presentation.login
+
+import android.content.Intent
+import android.os.Bundle
+import android.util.Log
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
+import org.android.go.sopt.R
+import org.android.go.sopt.data.User
+import org.android.go.sopt.presentation.main.MainActivity
+import org.android.go.sopt.presentation.signup.SignUpActivity
+import org.android.go.sopt.databinding.ActivityLoginBinding
+import org.android.go.sopt.util.*
+
+
+class LoginActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityLoginBinding
+    private var user: User? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityLoginBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        binding.root.setOnClickListener {
+            hideKeyboard(binding.root)
+        }
+
+        this.autoLogin()
+        this.onClickLogin()
+        this.onCLickSignUp()
+    }
+
+    private fun onClickLogin() {
+        with(binding) {
+            btMainLogin.setOnClickListener {
+                if (user !== null && user?.id == etMainId.text.toString() && user?.password == etMainPassword.text.toString()) {
+                    val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                    intent.putExtra(IntentKey.USER_DATA, user)
+                    saveUserInformation()
+                    startActivity(intent)
+                    showShortToast(getString(R.string.login_success_login_msg))
+                    if (!isFinishing) finish()
+                } else {
+                    showShortToast(getString(R.string.login_fail_login_msg))
+                }
+            }
+        }
+    }
+
+
+    private val getResultSignUp = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result: ActivityResult ->
+        if (result.resultCode == RESULT_OK) {
+            user = result.data?.getParcelable(IntentKey.USER_DATA, User::class.java)
+            Log.d("user", "---------\n$user")
+            showShortSnackbar(binding.root, getString(R.string.login_success_sign_up_msg))
+        }
+    }
+
+    private fun onCLickSignUp() {
+        binding.btMainSignUp.setOnClickListener {
+            val intent = Intent(this, SignUpActivity::class.java)
+            getResultSignUp.launch(intent)
+        }
+    }
+
+    private fun saveUserInformation() {
+        val sharedPreference = getSharedPreferences(KEY_PREFS, 0)
+        val editor = sharedPreference.edit()
+        editor.putString(KEY_ID, user?.id)
+        editor.putString(KEY_PASSWORD, user?.password)
+        editor.putString(KEY_NAME, user?.name)
+        editor.putString(KEY_SPECIALTY, user?.specialty)
+        editor.apply()
+    }
+
+    private fun autoLogin() {
+        val sharedPreferences = getSharedPreferences(KEY_PREFS, 0)
+
+        if (sharedPreferences.contains(KEY_ID) || sharedPreferences.contains(KEY_PASSWORD)) {
+            user = User(
+                sharedPreferences.getString(KEY_ID, ""),
+                sharedPreferences.getString(KEY_PASSWORD, ""),
+                sharedPreferences.getString(KEY_NAME, ""),
+                sharedPreferences.getString(KEY_SPECIALTY, "")
+            )
+            val intent = Intent(this, MainActivity::class.java)
+            intent.putExtra(IntentKey.USER_DATA, user)
+            startActivity(intent)
+            showShortToast(getString(R.string.login_success_login_msg))
+            if (!isFinishing) finish()
+        }
+    }
+
+    companion object {
+        private const val KEY_PREFS = "autoLogin"
+        private const val KEY_ID = "id"
+        private const val KEY_PASSWORD = "password"
+        private const val KEY_NAME = "name"
+        private const val KEY_SPECIALTY = "specialty"
+    }
+}
