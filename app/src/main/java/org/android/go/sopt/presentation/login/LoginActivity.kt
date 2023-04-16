@@ -1,7 +1,6 @@
 package org.android.go.sopt.presentation.login
 
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.result.ActivityResult
@@ -29,6 +28,7 @@ class LoginActivity : AppCompatActivity() {
             hideKeyboard(binding.root)
         }
 
+        this.autoLogin()
         this.onClickLogin()
         this.onCLickSignUp()
     }
@@ -39,6 +39,7 @@ class LoginActivity : AppCompatActivity() {
                 if (user !== null && user?.id == etMainId.text.toString() && user?.password == etMainPassword.text.toString()) {
                     val intent = Intent(this@LoginActivity, MainActivity::class.java)
                     intent.putExtra(IntentKey.USER_DATA, user)
+                    saveUserInformation()
                     startActivity(intent)
                     showShortToast(getString(R.string.login_success_login_msg))
                     if (!isFinishing) finish()
@@ -65,5 +66,41 @@ class LoginActivity : AppCompatActivity() {
             val intent = Intent(this, SignUpActivity::class.java)
             getResultSignUp.launch(intent)
         }
+    }
+
+    private fun saveUserInformation() {
+        val sharedPreference = getSharedPreferences(KEY_PREFS, 0)
+        val editor = sharedPreference.edit()
+        editor.putString(KEY_ID, user?.id)
+        editor.putString(KEY_PASSWORD, user?.password)
+        editor.putString(KEY_NAME, user?.name)
+        editor.putString(KEY_SPECIALTY, user?.specialty)
+        editor.apply()
+    }
+
+    private fun autoLogin() {
+        val sharedPreferences = getSharedPreferences(KEY_PREFS, 0)
+
+        if (sharedPreferences.contains(KEY_ID) || sharedPreferences.contains(KEY_PASSWORD)) {
+            user = User(
+                sharedPreferences.getString(KEY_ID, ""),
+                sharedPreferences.getString(KEY_PASSWORD, ""),
+                sharedPreferences.getString(KEY_NAME, ""),
+                sharedPreferences.getString(KEY_SPECIALTY, "")
+            )
+            val intent = Intent(this, MainActivity::class.java)
+            intent.putExtra(IntentKey.USER_DATA, user)
+            startActivity(intent)
+            showShortToast(getString(R.string.login_success_login_msg))
+            if (!isFinishing) finish()
+        }
+    }
+
+    companion object {
+        private const val KEY_PREFS = "autoLogin"
+        private const val KEY_ID = "id"
+        private const val KEY_PASSWORD = "password"
+        private const val KEY_NAME = "name"
+        private const val KEY_SPECIALTY = "specialty"
     }
 }
