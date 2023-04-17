@@ -21,41 +21,37 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-//        val currentFragment = supportFragmentManager.findFragmentById(R.id.fcv_main)
-//        if (currentFragment == null) {
-//            supportFragmentManager.beginTransaction().add(R.id.fcv_main, HomeFragment()).commit()
-//        }
-//        binding.bnvMain.setOnItemSelectedListener { item ->
-//            when (item.itemId) {
-//                R.id.menu_home -> {
-//                    HomeFragment()
-//                    return@setOnItemSelectedListener true
-//                }
-//                R.id.menu_search -> {
-//                    SearchFragment()
-//                    return@setOnItemSelectedListener true
-//                }
-//                else -> {
-//                    GalleryFragment()
-//                    return@setOnItemSelectedListener true
-//
-//                }
-//            }
-//        }
-
-        this.getUserData()
+        this.initLayout()
     }
 
-    private fun getUserData() {
-        val user: User? = intent.getParcelable(IntentKey.USER_DATA, User::class.java)
-        binding.tvMainName.text = "이름 : ${user?.name}"
-        binding.tvMainSpecialty.text = "특기 : ${user?.specialty}"
+
+
+    private fun initLayout() {
+        val currentFragment = supportFragmentManager.findFragmentById(R.id.fcv_main)
+        if (currentFragment == null) {
+            supportFragmentManager.beginTransaction().add(R.id.fcv_main, HomeFragment()).commit()
+        }
+        binding.bnvMain.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.menu_home -> {
+                    this.changeFragment(HomeFragment())
+                }
+                R.id.menu_search -> {
+                    this.changeFragment(SearchFragment())
+                }
+                else -> {
+                    this.changeFragment(GalleryFragment())
+                }
+            }
+            return@setOnItemSelectedListener true
+        }
     }
 
-//    private fun changeFragment(fragment: Fragment) {
-//        supportFragmentManager
-//            .beginTransaction()
-//            .replace(R.id.fcv_main, fragment)
-//            .commit()
-//    }
+
+    private fun changeFragment(fragment: Fragment) {
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.fcv_main, fragment)
+            .commit()
+    }
 }
