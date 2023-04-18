@@ -1,17 +1,10 @@
 package org.android.go.sopt.presentation.main
 
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import org.android.go.sopt.GalleryFragment
-import org.android.go.sopt.HomeFragment
 import org.android.go.sopt.R
-import org.android.go.sopt.SearchFragment
-import org.android.go.sopt.data.User
 import org.android.go.sopt.databinding.ActivityMainBinding
-import org.android.go.sopt.util.IntentKey
-import org.android.go.sopt.util.getParcelable
 
 
 class MainActivity : AppCompatActivity() {

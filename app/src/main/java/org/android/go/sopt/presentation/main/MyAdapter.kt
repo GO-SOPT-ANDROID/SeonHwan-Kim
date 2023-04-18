@@ -1,8 +1,9 @@
+package org.android.go.sopt.presentation.main
+
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import org.android.go.sopt.databinding.FragmentHomeBinding
 import org.android.go.sopt.databinding.ItemGithubRepoBinding
 
 class MyAdapter(context: Context) : RecyclerView.Adapter<MyViewHolder>() {
