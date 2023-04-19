@@ -6,31 +6,32 @@
     android:padding="10dp">
 
     <ImageView
+        android:id="@+id/iv_dog_image"
         android:layout_width="100dp"
         android:layout_height="0dp"
-        android:src="@drawable/img_introduce"
+        android:src="@drawable/img_beagle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/tv_item_github_repo"
+        android:id="@+id/tv_dog_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="레포지토리 명"
+        android:text="강아지 이름"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@id/tv_item_github_author"
+        app:layout_constraintBottom_toTopOf="@id/tv_dog_size"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/tv_item_github_author"
+        android:id="@+id/tv_dog_size"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="레포지토리 주인"
+        android:text="강아지 사이즈"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_item_github_repo" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_dog_name" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
