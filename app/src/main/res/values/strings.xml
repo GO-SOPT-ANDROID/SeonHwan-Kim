@@ -26,5 +26,6 @@
     <string name="sign_up_specialty_err_msg">특기를 입력해주세요</string>
 
     <!--    main page-->
+    <string name="item_title_dog">강아지</string>
 
 </resources>
