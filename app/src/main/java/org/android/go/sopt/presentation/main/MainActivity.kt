@@ -15,6 +15,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         this.initLayout()
+        this.goToTop()
     }
 
 
@@ -46,5 +47,18 @@ class MainActivity : AppCompatActivity() {
             .beginTransaction()
             .replace(R.id.fcv_main, fragment)
             .commit()
+    }
+
+    private fun goToTop(){
+        binding.bnvMain.setOnItemReselectedListener {
+            when(it.itemId){
+                R.id.menu_home -> {
+                    val currentFragment = supportFragmentManager.findFragmentById(R.id.fcv_main)
+                    if(currentFragment is HomeFragment){
+                        currentFragment.scrollToTop()
+                    }
+                }
+            }
+        }
     }
 }

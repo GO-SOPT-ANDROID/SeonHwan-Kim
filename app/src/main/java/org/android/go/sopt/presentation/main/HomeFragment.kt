@@ -49,6 +49,10 @@ class HomeFragment : Fragment() {
         _binding = null
     }
 
+    fun scrollToTop() {
+        binding.rvHomeDog.smoothScrollToPosition(0)
+    }
+
     companion object {
         private const val SIZE_SMALL = "소형견"
         private const val SIZE_MEDIUM = "중형견"
