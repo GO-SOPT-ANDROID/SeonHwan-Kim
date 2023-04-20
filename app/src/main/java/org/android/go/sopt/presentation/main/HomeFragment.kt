@@ -24,7 +24,6 @@ class HomeFragment : Fragment() {
         Dog("진돗개", R.drawable.img_jindo, SIZE_MEDIUM),
         Dog("비글", R.drawable.img_beagle, SIZE_MEDIUM),
         Dog("골든 리트리버", R.drawable.img_golden_retriever, SIZE_LARGE),
-        Dog("사모예드", R.drawable.img_samoyed, SIZE_LARGE),
         Dog("셰퍼드", R.drawable.img_shepherd, SIZE_LARGE)
     )
 
