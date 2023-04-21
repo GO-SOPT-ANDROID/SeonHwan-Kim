@@ -1,10 +1,9 @@
-package org.android.go.sopt.presentation.main
+package org.android.go.sopt.presentation.main.home
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import org.android.go.sopt.R
 import org.android.go.sopt.data.Dog
 import org.android.go.sopt.databinding.ItemDogBinding
 
@@ -27,9 +26,7 @@ class DogAdapter(context: Context) : RecyclerView.Adapter<DogAdapter.DogViewHold
         return DogViewHolder(binding)
     }
 
-    override fun getItemCount(): Int {
-        return dogList.size
-    }
+    override fun getItemCount(): Int = dogList.size
 
     override fun onBindViewHolder(holder: DogViewHolder, position: Int) {
         holder.onBind(dogList[position])
@@ -40,4 +37,3 @@ class DogAdapter(context: Context) : RecyclerView.Adapter<DogAdapter.DogViewHold
         notifyDataSetChanged()
     }
 }
-

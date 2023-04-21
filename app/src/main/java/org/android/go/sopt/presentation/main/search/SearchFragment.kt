@@ -1,4 +1,4 @@
-package org.android.go.sopt.presentation.main
+package org.android.go.sopt.presentation.main.search
 
 import android.content.Context
 import android.os.Bundle
