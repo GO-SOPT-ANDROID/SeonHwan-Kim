@@ -12,4 +12,8 @@
         android:id="@+id/menu_gallery"
         android:icon="@drawable/ic_gallery"
         android:title="갤러리"/>
+    <item
+        android:id="@+id/menu_mypage"
+        android:icon="@drawable/ic_mypage"
+        android:title="내 정보"/>
 </menu>
