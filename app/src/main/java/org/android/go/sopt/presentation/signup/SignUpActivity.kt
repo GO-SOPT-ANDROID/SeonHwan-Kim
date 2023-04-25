@@ -45,13 +45,11 @@ class SignUpActivity : AppCompatActivity() {
                     showShortToast(getString(R.string.sign_up_specialty_err_msg))
                 } else {
                     val intent = Intent(this@SignUpActivity, LoginActivity::class.java)
-                    intent.putExtra(
-                        IntentKey.USER_DATA, User(
-                            id.toString(),
-                            password.toString(),
-                            name.toString(),
-                            specialty.toString()
-                        )
+                    saveUserInformation(
+                        id.toString(),
+                        password.toString(),
+                        name.toString(),
+                        specialty.toString()
                     )
                     setResult(RESULT_OK, intent)
                     // 만약 종료가 되지 않았다면 종료시키기
@@ -59,5 +57,26 @@ class SignUpActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun saveUserInformation(id: String, password: String, name: String, specialty: String) {
+        val sharedPreferences = getSharedPreferences(KEY_PREFS, 0)
+
+        sharedPreferences.edit().run {
+            putBoolean(KEY_ISLOGIN, false)
+            putString(KEY_ID, id)
+            putString(KEY_PASSWORD, password)
+            putString(KEY_NAME, name)
+            putString(KEY_SPECIALTY, specialty)
+        }.apply()
+    }
+
+    companion object {
+        private const val KEY_PREFS = "userInfo"
+        private const val KEY_ISLOGIN = "isLogin"
+        private const val KEY_ID = "id"
+        private const val KEY_PASSWORD = "password"
+        private const val KEY_NAME = "name"
+        private const val KEY_SPECIALTY = "specialty"
     }
 }
