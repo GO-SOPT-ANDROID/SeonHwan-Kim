@@ -60,7 +60,6 @@ class LoginActivity : AppCompatActivity() {
         ActivityResultContracts.StartActivityForResult()
     ) { result: ActivityResult ->
         if (result.resultCode == RESULT_OK) {
-//            user = result.data?.getParcelable(IntentKey.USER_DATA, User::class.java)
             showShortSnackbar(binding.root, getString(R.string.login_success_sign_up_msg))
         }
     }
@@ -69,7 +68,6 @@ class LoginActivity : AppCompatActivity() {
         binding.btMainSignUp.setOnClickListener {
             val intent = Intent(this, SignUpActivity::class.java)
             getResultSignUp.launch(intent)
-            startActivity(intent)
         }
     }
 
