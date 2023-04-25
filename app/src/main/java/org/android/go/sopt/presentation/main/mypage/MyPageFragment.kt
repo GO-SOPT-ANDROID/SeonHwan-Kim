@@ -42,6 +42,7 @@ class MyPageFragment : Fragment() {
             val sharedPreferences = this.requireActivity().getSharedPreferences(KEY_PREFS, 0)
             sharedPreferences.edit().putBoolean(KEY_ISLOGIN, false).apply()
             startActivity(intent)
+            finishFragment()
         }
     }
 
@@ -51,7 +52,12 @@ class MyPageFragment : Fragment() {
             val sharedPreferences = this.requireActivity().getSharedPreferences(KEY_PREFS, 0)
             sharedPreferences.edit().clear().apply()
             startActivity(intent)
+            finishFragment()
         }
+    }
+
+    private fun finishFragment(){
+        if(!this.requireActivity().isFinishing) this.requireActivity().finish()
     }
 
     companion object {
