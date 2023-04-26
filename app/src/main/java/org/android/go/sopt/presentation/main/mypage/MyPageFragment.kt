@@ -6,8 +6,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import org.android.go.sopt.R
 import org.android.go.sopt.databinding.FragmentMyPageBinding
+import org.android.go.sopt.SoptApplication
 import org.android.go.sopt.presentation.login.LoginActivity
 
 class MyPageFragment : Fragment() {
@@ -39,8 +39,7 @@ class MyPageFragment : Fragment() {
     private fun logout() {
         binding.btMyPageLogout.setOnClickListener {
             val intent = Intent(activity, LoginActivity::class.java)
-            val sharedPreferences = this.requireActivity().getSharedPreferences(KEY_PREFS, 0)
-            sharedPreferences.edit().putBoolean(KEY_ISLOGIN, false).apply()
+            SoptApplication.prefs.setBoolean(KEY_ISLOGIN, false)
             startActivity(intent)
             finishFragment()
         }
@@ -49,8 +48,7 @@ class MyPageFragment : Fragment() {
     private fun withdrawal() {
         binding.btMyPageWithdrawal.setOnClickListener {
             val intent = Intent(activity, LoginActivity::class.java)
-            val sharedPreferences = this.requireActivity().getSharedPreferences(KEY_PREFS, 0)
-            sharedPreferences.edit().clear().apply()
+            SoptApplication.prefs.deleteUserInformation()
             startActivity(intent)
             finishFragment()
         }
@@ -61,7 +59,6 @@ class MyPageFragment : Fragment() {
     }
 
     companion object {
-        private const val KEY_PREFS = "userInfo"
         private const val KEY_ISLOGIN = "isLogin"
     }
 }

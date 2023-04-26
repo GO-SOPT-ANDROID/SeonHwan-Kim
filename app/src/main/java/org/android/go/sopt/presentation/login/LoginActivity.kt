@@ -2,15 +2,14 @@ package org.android.go.sopt.presentation.login
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import org.android.go.sopt.R
-import org.android.go.sopt.data.User
 import org.android.go.sopt.presentation.main.MainActivity
 import org.android.go.sopt.presentation.signup.SignUpActivity
 import org.android.go.sopt.databinding.ActivityLoginBinding
+import org.android.go.sopt.SoptApplication
 import org.android.go.sopt.util.*
 
 
@@ -35,21 +34,19 @@ class LoginActivity : AppCompatActivity() {
     private fun onClickLogin() {
         with(binding) {
             btMainLogin.setOnClickListener {
-                val sharedPreferences = getSharedPreferences(KEY_PREFS, 0)
-
-                if (sharedPreferences.getString(
+                if (SoptApplication.prefs.getString(
                         KEY_ID,
                         null
-                    ) == etMainId.text.toString() && sharedPreferences.getString(
+                    ) == etMainId.text.toString() && SoptApplication.prefs.getString(
                         KEY_PASSWORD, null
                     ) == etMainPassword.text.toString()
-                ){
+                ) {
                     val intent = Intent(this@LoginActivity, MainActivity::class.java)
-                    sharedPreferences.edit().putBoolean(KEY_ISLOGIN, true).apply()
+                    SoptApplication.prefs.setBoolean(KEY_ISLOGIN, true)
                     startActivity(intent)
                     showShortToast(getString(R.string.login_success_login_msg))
-                    if(!isFinishing) finish()
-                } else{
+                    if (!isFinishing) finish()
+                } else {
                     showShortToast(getString(R.string.login_fail_login_msg))
                 }
             }
@@ -72,9 +69,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun autoLogin() {
-        val sharedPreferences = getSharedPreferences(KEY_PREFS, 0)
-
-        if (sharedPreferences.getBoolean(KEY_ISLOGIN, false)) {
+        if (SoptApplication.prefs.getBoolean(KEY_ISLOGIN, false)) {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             showShortToast(getString(R.string.login_success_login_msg))
@@ -83,7 +78,6 @@ class LoginActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val KEY_PREFS = "userInfo"
         private const val KEY_ISLOGIN = "isLogin"
         private const val KEY_ID = "id"
         private const val KEY_PASSWORD = "password"
