@@ -3,14 +3,14 @@ package org.android.go.sopt.presentation.main.home
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import org.android.go.sopt.data.Dog
 import org.android.go.sopt.databinding.ItemDogBinding
 
-class DogAdapter(context: Context) : RecyclerView.Adapter<DogAdapter.DogViewHolder>() {
+class DogAdapter(context: Context) : ListAdapter<Dog, DogAdapter.DogViewHolder>(DogDiffCallback()) {
     private val inflater by lazy { LayoutInflater.from(context) }
-
-    private var dogList: List<Dog> = emptyList()
 
     class DogViewHolder(private val binding: ItemDogBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -26,14 +26,17 @@ class DogAdapter(context: Context) : RecyclerView.Adapter<DogAdapter.DogViewHold
         return DogViewHolder(binding)
     }
 
-    override fun getItemCount(): Int = dogList.size
-
     override fun onBindViewHolder(holder: DogViewHolder, position: Int) {
-        holder.onBind(dogList[position])
+        holder.onBind(getItem(position))
+    }
+}
+
+class DogDiffCallback : DiffUtil.ItemCallback<Dog>() {
+    override fun areItemsTheSame(oldItem: Dog, newItem: Dog): Boolean {
+        return oldItem.name == newItem.name
     }
 
-    fun setDogList(dogList: List<Dog>) {
-        this.dogList = dogList.toList()
-        notifyDataSetChanged()
+    override fun areContentsTheSame(oldItem: Dog, newItem: Dog): Boolean {
+        return oldItem == newItem
     }
 }

@@ -29,7 +29,7 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val titleAdapter = TitleAdapter(requireContext())
         val dogAdapter = DogAdapter(requireContext())
-        dogAdapter.setDogList(viewModel.mockDogList)
+        dogAdapter.submitList(viewModel.mockDogList)
         binding.rvHomeDog.adapter = ConcatAdapter(titleAdapter, dogAdapter)
     }
 
