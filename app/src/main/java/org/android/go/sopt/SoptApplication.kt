@@ -9,7 +9,7 @@ class SoptApplication : Application() {
     }
 
     override fun onCreate() {
-        prefs = UserSharedPreferences(applicationContext)
+        prefs = UserSharedPreferences(this)
         super.onCreate()
     }
 }
