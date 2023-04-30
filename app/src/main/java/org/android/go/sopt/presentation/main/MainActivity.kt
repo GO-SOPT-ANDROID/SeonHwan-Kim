@@ -1,17 +1,14 @@
 package org.android.go.sopt.presentation.main
 
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import org.android.go.sopt.GalleryFragment
-import org.android.go.sopt.HomeFragment
 import org.android.go.sopt.R
-import org.android.go.sopt.SearchFragment
-import org.android.go.sopt.data.User
 import org.android.go.sopt.databinding.ActivityMainBinding
-import org.android.go.sopt.util.IntentKey
-import org.android.go.sopt.util.getParcelable
+import org.android.go.sopt.presentation.main.gallery.GalleryFragment
+import org.android.go.sopt.presentation.main.home.HomeFragment
+import org.android.go.sopt.presentation.main.mypage.MyPageFragment
+import org.android.go.sopt.presentation.main.search.SearchFragment
 
 
 class MainActivity : AppCompatActivity() {
@@ -21,41 +18,54 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-//        val currentFragment = supportFragmentManager.findFragmentById(R.id.fcv_main)
-//        if (currentFragment == null) {
-//            supportFragmentManager.beginTransaction().add(R.id.fcv_main, HomeFragment()).commit()
-//        }
-//        binding.bnvMain.setOnItemSelectedListener { item ->
-//            when (item.itemId) {
-//                R.id.menu_home -> {
-//                    HomeFragment()
-//                    return@setOnItemSelectedListener true
-//                }
-//                R.id.menu_search -> {
-//                    SearchFragment()
-//                    return@setOnItemSelectedListener true
-//                }
-//                else -> {
-//                    GalleryFragment()
-//                    return@setOnItemSelectedListener true
-//
-//                }
-//            }
-//        }
-
-        this.getUserData()
+        this.initLayout()
+        this.goToTop()
     }
 
-    private fun getUserData() {
-        val user: User? = intent.getParcelable(IntentKey.USER_DATA, User::class.java)
-        binding.tvMainName.text = "이름 : ${user?.name}"
-        binding.tvMainSpecialty.text = "특기 : ${user?.specialty}"
+
+
+    private fun initLayout() {
+        val currentFragment = supportFragmentManager.findFragmentById(R.id.fcv_main)
+        if (currentFragment == null) {
+            supportFragmentManager.beginTransaction().add(R.id.fcv_main, HomeFragment()).commit()
+        }
+        binding.bnvMain.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.menu_home -> {
+                    this.changeFragment(HomeFragment())
+                }
+                R.id.menu_search -> {
+                    this.changeFragment(SearchFragment())
+                }
+                R.id.menu_gallery -> {
+                    this.changeFragment(GalleryFragment())
+                }
+                else -> {
+                    this.changeFragment(MyPageFragment())
+                }
+            }
+            return@setOnItemSelectedListener true
+        }
     }
 
-//    private fun changeFragment(fragment: Fragment) {
-//        supportFragmentManager
-//            .beginTransaction()
-//            .replace(R.id.fcv_main, fragment)
-//            .commit()
-//    }
+
+    private fun changeFragment(fragment: Fragment) {
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.fcv_main, fragment)
+            .commit()
+    }
+
+    private fun goToTop(){
+        binding.bnvMain.setOnItemReselectedListener {
+            when(it.itemId){
+                R.id.menu_home -> {
+                    val currentFragment = supportFragmentManager.findFragmentById(R.id.fcv_main)
+                    if(currentFragment is HomeFragment){
+                        currentFragment.scrollToTop()
+                    }
+                }
+            }
+        }
+    }
 }
