@@ -29,6 +29,9 @@ class MyPageFragment : Fragment() {
 
         this.logout()
         this.withdrawal()
+
+        binding.tvMyPageName.text = "이름 : ${SoptApplication.prefs.getString(KEY_NAME, "")}"
+        binding.tvMyPageSpecialty.text = "특기 : ${SoptApplication.prefs.getString(KEY_SPECIALTY, "")}"
     }
 
     override fun onDestroy() {
@@ -60,5 +63,7 @@ class MyPageFragment : Fragment() {
 
     companion object {
         private const val KEY_ISLOGIN = "isLogin"
+        private const val KEY_NAME = "name"
+        private const val KEY_SPECIALTY = "specialty"
     }
 }
