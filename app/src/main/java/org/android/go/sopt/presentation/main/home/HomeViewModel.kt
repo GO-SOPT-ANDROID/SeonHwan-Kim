@@ -2,7 +2,7 @@ package org.android.go.sopt.presentation.main.home
 
 import androidx.lifecycle.ViewModel
 import org.android.go.sopt.R
-import org.android.go.sopt.data.Dog
+import org.android.go.sopt.data.local.Dog
 
 class HomeViewModel: ViewModel() {
     val mockDogList = listOf<Dog>(
