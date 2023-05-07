@@ -28,7 +28,7 @@ class LoginActivity : AppCompatActivity() {
 
         this.autoLogin()
         this.onClickLogin()
-        this.onCLickSignUp()
+        this.onClickSignUp()
     }
 
     private fun onClickLogin() {
@@ -53,18 +53,10 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private val getResultSignUp = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result: ActivityResult ->
-        if (result.resultCode == RESULT_OK) {
-            showShortSnackbar(binding.root, getString(R.string.login_success_sign_up_msg))
-        }
-    }
-
-    private fun onCLickSignUp() {
+    private fun onClickSignUp() {
         binding.btMainSignUp.setOnClickListener {
             val intent = Intent(this, SignUpActivity::class.java)
-            getResultSignUp.launch(intent)
+            startActivity(intent)
         }
     }
 
