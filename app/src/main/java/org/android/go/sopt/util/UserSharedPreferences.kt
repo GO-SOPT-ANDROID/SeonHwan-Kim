@@ -15,7 +15,7 @@ class UserSharedPreferences(context: Context) {
     }
 
     fun setString(key: String, value: String?) {
-        prefs.edit { setString(key, value) }
+        prefs.edit { putString(key, value) }
     }
 
     fun getBoolean(key: String, defValue: Boolean): Boolean {
@@ -23,7 +23,7 @@ class UserSharedPreferences(context: Context) {
     }
 
     fun setBoolean(key: String, value: Boolean) {
-        prefs.edit { setBoolean(key, value) }
+        prefs.edit { putBoolean(key, value) }
     }
 
     fun saveUserInformation(
@@ -38,36 +38,6 @@ class UserSharedPreferences(context: Context) {
     }
 
     fun deleteUserInformation() = prefs.edit { clear() }
-
-
-//    fun getString(key: String, defValue: String?): String {
-//        return prefs.getString(key, defValue).toString()
-//    }
-//
-//    fun setString(key: String, value: String?) {
-//        prefs.edit().putString(key, value).apply()
-//    }
-//
-//    fun getBoolean(key: String, defValue: Boolean): Boolean {
-//        return prefs.getBoolean(key, defValue)
-//    }
-//
-//    fun setBoolean(key: String, value: Boolean) {
-//        prefs.edit().putBoolean(key, value).apply()
-//    }
-//
-//    fun saveUserInformation(
-//        isLogin: Boolean,
-//        user: User
-//    ) {
-//        setBoolean(KEY_ISLOGIN, isLogin)
-//        setString(KEY_ID, user.id)
-//        setString(KEY_PASSWORD, user.password)
-//        setString(KEY_NAME, user.name)
-//        setString(KEY_SPECIALTY, user.specialty)
-//    }
-//
-//    fun deleteUserInformation() = prefs.edit().clear().apply()
 
     companion object {
         private const val KEY_PREFS = "userInfo"
