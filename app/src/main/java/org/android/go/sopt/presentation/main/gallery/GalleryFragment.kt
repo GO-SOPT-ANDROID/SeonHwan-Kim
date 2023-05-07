@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import org.android.go.sopt.R
 import org.android.go.sopt.databinding.FragmentGalleryBinding
 
 class GalleryFragment : Fragment() {
@@ -23,10 +24,14 @@ class GalleryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.pagerGallery.adapter = PagerAdapter().apply {
+            setItemList(listOf(R.drawable.img_jindo, R.drawable.img_beagle, R.drawable.img_golden_retriever))
+        }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
         _binding = null
+        super.onDestroyView()
     }
 }
