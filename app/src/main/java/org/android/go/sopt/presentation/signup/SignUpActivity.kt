@@ -82,9 +82,11 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private fun isAllConditionSatisfy(): Boolean {
-        return binding.etSignupId.text.length in 6..10 &&
-                binding.etSignupPassword.text.length in 8..12 &&
-                binding.etSignupName.text.isNotBlank() &&
-                binding.etSignupSpecialty.text.isNotBlank()
+        with(binding) {
+            return etSignupId.text.length in 6..10 &&
+                    etSignupPassword.text.length in 8..12 &&
+                    etSignupName.text.isNotBlank() &&
+                    etSignupSpecialty.text.isNotBlank()
+        }
     }
 }
