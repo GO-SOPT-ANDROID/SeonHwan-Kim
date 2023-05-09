@@ -1,18 +1,31 @@
 package org.android.go.sopt.presentation.main.gallery
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import org.android.go.sopt.data.remote.model.ResponseHomeUserDto
+import org.android.go.sopt.data.remote.service.HomeUserService
 import org.android.go.sopt.databinding.ItemPagerBinding
 
-class PagerAdapter(_itemList: List<Int> = listOf()) :
-    RecyclerView.Adapter<PagerAdapter.PagerViewHolder>() {
-    private var itemList: List<Int> = _itemList
+class PagerAdapter() :
+    ListAdapter<ResponseHomeUserDto.UserData, PagerAdapter.PagerViewHolder>(PagerDiffCallBack()) {
 
     class PagerViewHolder(private val binding: ItemPagerBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(src: Int) {
-            binding.ivPager.setImageResource(src)
+        fun bind(userData: ResponseHomeUserDto.UserData) {
+            with(binding){
+                Glide.with(root)
+                    .load(userData.avatar)
+                    .into(ivAvatar)
+                tvPagerEmail.text = "email : ${userData.email}"
+                tvPagerFirstName.text = "First Name : ${userData.first_name}"
+                tvPagerLastName.text = "Last Name : ${userData.last_name}"
+            }
+
         }
     }
 
@@ -20,25 +33,23 @@ class PagerAdapter(_itemList: List<Int> = listOf()) :
         val binding = ItemPagerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return PagerViewHolder(binding)
     }
-
-    override fun getItemCount() = itemList.size
-
     override fun onBindViewHolder(holder: PagerViewHolder, position: Int) {
-        holder.bind(itemList[position])
-    }
-
-    fun setItemList(itemList: List<Int>) {
-        this.itemList = itemList
-        notifyDataSetChanged()
+        holder.bind(getItem(position))
     }
 }
 
-//class PagerDiffCallBack : DiffUtil.ItemCallback<List<Int>>() {
-//    override fun areItemsTheSame(oldItem: List<Int>, newItem: List<Int>): Boolean {
-//        return oldItem == newItem
-//    }
-//
-//    override fun areContentsTheSame(oldItem: List<Int>, newItem: List<Int>): Boolean {
-//        return oldItem == newItem
-//    }
-//}
+class PagerDiffCallBack : DiffUtil.ItemCallback<ResponseHomeUserDto.UserData>() {
+    override fun areItemsTheSame(
+        oldItem: ResponseHomeUserDto.UserData,
+        newItem: ResponseHomeUserDto.UserData
+    ): Boolean {
+        return oldItem == newItem
+    }
+
+    override fun areContentsTheSame(
+        oldItem: ResponseHomeUserDto.UserData,
+        newItem: ResponseHomeUserDto.UserData
+    ): Boolean {
+        return oldItem == newItem
+    }
+}
