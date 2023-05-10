@@ -27,6 +27,10 @@ android {
 
         // BASE URL 불러오기
         buildConfigField "String", "BASE_URL", properties['BASE_URL']
+
+        // kakao url, auth 불러오기
+        buildConfigField "String", "KAKAO_BASE_URL", properties['KAKAO_BASE_URL']
+        buildConfigField "String", "KAKAO_AUTH_HEADER", properties['KAKAO_AUTH_HEADER']
     }
 
     buildTypes {
