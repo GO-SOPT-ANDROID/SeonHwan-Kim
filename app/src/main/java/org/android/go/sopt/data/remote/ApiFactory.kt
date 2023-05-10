@@ -22,11 +22,10 @@ object ApiFactory {
 }
 
 object ReqresApiFactory {
-    val json = Json { ignoreUnknownKeys = true }
     val retrofit: Retrofit by lazy {
         Retrofit.Builder()
             .baseUrl("https://reqres.in/api/")
-            .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
+            .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
             .build()
     }
 
