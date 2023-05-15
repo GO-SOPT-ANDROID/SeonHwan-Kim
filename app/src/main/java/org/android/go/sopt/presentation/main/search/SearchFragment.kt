@@ -18,7 +18,6 @@ class SearchFragment : Fragment() {
     private var _binding: FragmentSearchBinding? = null
     private val binding: FragmentSearchBinding
         get() = requireNotNull(_binding) { "앗! binding이 null이다!" }
-    private val kakaoSearchService = ServicePool.kakaoSearchService
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,7 +42,7 @@ class SearchFragment : Fragment() {
 
     private fun onClickSearchBtn() {
         binding.ibSearchBtn.setOnClickListener {
-            kakaoSearchService.kakaoSearchVideo(
+            ServicePool.kakaoSearchService.kakaoSearchVideo(
                 query = binding.etSearchSearchVideo.text.toString(),
                 sort = "accuracy",
                 page = 1,

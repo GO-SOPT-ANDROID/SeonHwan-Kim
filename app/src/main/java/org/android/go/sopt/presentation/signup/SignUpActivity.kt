@@ -22,7 +22,6 @@ import retrofit2.Response
 class SignUpActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySignUpBinding
-    private val signUpService = ServicePool.signUpService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +39,7 @@ class SignUpActivity : AppCompatActivity() {
     private fun onClickComplete() {
         with(binding) {
             btSignupComplete.setOnClickListener {
-                signUpService.signUp(
+                ServicePool.signUpService.signUp(
                     RequestSignUpDto(
                         etSignupId.text.toString(),
                         etSignupPassword.text.toString(),
