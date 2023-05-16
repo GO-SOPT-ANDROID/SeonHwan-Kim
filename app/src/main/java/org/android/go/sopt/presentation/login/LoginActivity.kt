@@ -5,7 +5,10 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModel
 import org.android.go.sopt.R
 import org.android.go.sopt.presentation.main.MainActivity
 import org.android.go.sopt.presentation.signup.SignUpActivity
@@ -23,10 +26,11 @@ import retrofit2.Response
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
+    private val viewModel by viewModels<LoginViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityLoginBinding.inflate(layoutInflater)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
         setContentView(binding.root)
 
         binding.root.setOnClickListener {
@@ -41,31 +45,10 @@ class LoginActivity : AppCompatActivity() {
     private fun onClickLogin() {
         with(binding) {
             btMainLogin.setOnClickListener {
-                ServicePool.signInService.signIn(
-                    RequestSignInDto(
-                        etMainId.text.toString(),
-                        etMainPassword.text.toString(),
-                    )
-                ).enqueue(object : retrofit2.Callback<ResponseSignInDto> {
-                    override fun onResponse(
-                        call: Call<ResponseSignInDto>,
-                        response: Response<ResponseSignInDto>
-                    ) {
-                        if (response.isSuccessful) {
-                            SoptApplication.prefs.setBoolean(KEY_ISLOGIN, true)
-                            val intent = Intent(this@LoginActivity, MainActivity::class.java)
-                            startActivity(intent)
-                            showShortToast(getString(R.string.login_success_login_msg))
-                            if (!isFinishing) finish()
-                        } else {
-                            response.body()?.message?.let { showShortToast(it) }
-                        }
-                    }
-
-                    override fun onFailure(call: Call<ResponseSignInDto>, t: Throwable) {
-                        t.message?.let { showShortToast(it) }
-                    }
-                })
+                viewModel.signIn()
+                viewModel.signIn.observe(this@LoginActivity){data ->
+                    showShortToast(data.toString())
+                }
             }
         }
     }
