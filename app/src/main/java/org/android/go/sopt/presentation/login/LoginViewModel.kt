@@ -22,7 +22,11 @@ class LoginViewModel: ViewModel() {
     private val _signIn = MutableLiveData<ResponseSignInDto>()
     val signIn: LiveData<ResponseSignInDto> get() = _signIn
 
-    fun signIn(){
+    fun onClickLogin(){
+        signIn()
+    }
+
+    private fun signIn(){
         ServicePool.signInService.signIn(
             RequestSignInDto(
                 id.value.toString(), password.value.toString()
