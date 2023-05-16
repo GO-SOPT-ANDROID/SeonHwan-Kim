@@ -31,6 +31,9 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
+        binding.vm = viewModel
+        binding.lifecycleOwner = this
+
         setContentView(binding.root)
 
         binding.root.setOnClickListener {
@@ -43,14 +46,20 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun onClickLogin() {
-        with(binding) {
-            btMainLogin.setOnClickListener {
-                viewModel.signIn()
-                viewModel.signIn.observe(this@LoginActivity){data ->
-                    showShortToast(data.toString())
-                }
+        viewModel.onClickLogin()
+        viewModel.signIn.observe(this){ data ->
+            when(data.status){
+                200 -> navigateToMainActivity()
+                else -> showShortToast("id 또는 password가 일치하지 않습니다.")
             }
         }
+    }
+
+    private fun navigateToMainActivity(){
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+        showShortToast("로그인 성공")
+        if(!isFinishing) finish()
     }
 
 
