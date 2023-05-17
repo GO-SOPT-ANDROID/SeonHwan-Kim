@@ -12,6 +12,7 @@ import org.android.go.sopt.presentation.signup.SignUpActivity
 import org.android.go.sopt.databinding.ActivityLoginBinding
 import org.android.go.sopt.SoptApplication
 import org.android.go.sopt.data.remote.ServicePool
+import org.android.go.sopt.data.remote.model.BaseResponseDto
 import org.android.go.sopt.data.remote.model.RequestSignInDto
 import org.android.go.sopt.data.remote.model.ResponseSignInDto
 import org.android.go.sopt.data.remote.service.SignInService
@@ -46,10 +47,10 @@ class LoginActivity : AppCompatActivity() {
                         etMainId.text.toString(),
                         etMainPassword.text.toString(),
                     )
-                ).enqueue(object : retrofit2.Callback<ResponseSignInDto> {
+                ).enqueue(object : retrofit2.Callback<BaseResponseDto<ResponseSignInDto>> {
                     override fun onResponse(
-                        call: Call<ResponseSignInDto>,
-                        response: Response<ResponseSignInDto>
+                        call: Call<BaseResponseDto<ResponseSignInDto>>,
+                        response: Response<BaseResponseDto<ResponseSignInDto>>
                     ) {
                         if (response.isSuccessful) {
                             SoptApplication.prefs.setBoolean(KEY_ISLOGIN, true)
@@ -62,7 +63,7 @@ class LoginActivity : AppCompatActivity() {
                         }
                     }
 
-                    override fun onFailure(call: Call<ResponseSignInDto>, t: Throwable) {
+                    override fun onFailure(call: Call<BaseResponseDto<ResponseSignInDto>>, t: Throwable) {
                         t.message?.let { showShortToast(it) }
                     }
                 })
