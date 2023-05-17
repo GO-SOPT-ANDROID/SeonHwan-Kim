@@ -1,5 +1,6 @@
 package org.android.go.sopt.data.remote.service
 
+import org.android.go.sopt.data.remote.model.BaseResponseDto
 import org.android.go.sopt.data.remote.model.RequestSignUpDto
 import org.android.go.sopt.data.remote.model.ResponseSignUpDto
 import retrofit2.Call
@@ -12,5 +13,5 @@ interface SignUpService {
     fun signUp(
         @Body
         request: RequestSignUpDto,
-    ): Call<ResponseSignUpDto>
+    ): Call<BaseResponseDto<ResponseSignUpDto>>
 }

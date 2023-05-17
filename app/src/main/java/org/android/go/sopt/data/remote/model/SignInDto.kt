@@ -13,20 +13,10 @@ data class RequestSignInDto(
 
 @Serializable
 data class ResponseSignInDto(
-    @SerialName("status")
-    val status: Int,
-    @SerialName("message")
-    val message: String,
-    @SerialName("data")
-    val data: SignInData
-){
-    @Serializable
-    data class SignInData(
-        @SerialName("id")
-        val id: String,
-        @SerialName("name")
-        val name: String,
-        @SerialName("skill")
-        val skill: String
-    )
-}
+    @SerialName("id")
+    val id: String,
+    @SerialName("name")
+    val name: String,
+    @SerialName("skill")
+    val skill: String
+)

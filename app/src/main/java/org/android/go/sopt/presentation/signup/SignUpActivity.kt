@@ -11,6 +11,7 @@ import org.android.go.sopt.data.local.User
 import org.android.go.sopt.databinding.ActivitySignUpBinding
 import org.android.go.sopt.SoptApplication
 import org.android.go.sopt.data.remote.ServicePool
+import org.android.go.sopt.data.remote.model.BaseResponseDto
 import org.android.go.sopt.data.remote.model.RequestSignUpDto
 import org.android.go.sopt.data.remote.model.ResponseSignUpDto
 import org.android.go.sopt.presentation.login.LoginActivity
@@ -46,9 +47,9 @@ class SignUpActivity : AppCompatActivity() {
                         etSignupName.text.toString(),
                         etSignupSpecialty.text.toString()
                     )
-                ).enqueue(object : retrofit2.Callback<ResponseSignUpDto> {
+                ).enqueue(object : retrofit2.Callback<BaseResponseDto<ResponseSignUpDto>> {
                     override fun onResponse(
-                        call: Call<ResponseSignUpDto>, response: Response<ResponseSignUpDto>
+                        call: Call<BaseResponseDto<ResponseSignUpDto>>, response: Response<BaseResponseDto<ResponseSignUpDto>>
                     ) {
                         if (response.isSuccessful) {
                             response.body()?.message?.let { showShortToast(it) }
@@ -61,7 +62,7 @@ class SignUpActivity : AppCompatActivity() {
                         }
                     }
 
-                    override fun onFailure(call: Call<ResponseSignUpDto>, t: Throwable) {
+                    override fun onFailure(call: Call<BaseResponseDto<ResponseSignUpDto>>, t: Throwable) {
                         t.message?.let { showShortToast(it) }
                     }
 

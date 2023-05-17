@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import org.android.go.sopt.R
 import org.android.go.sopt.SoptApplication
 import org.android.go.sopt.data.remote.ServicePool
+import org.android.go.sopt.data.remote.model.BaseResponseDto
 import org.android.go.sopt.data.remote.model.RequestSignInDto
 import org.android.go.sopt.data.remote.model.ResponseSignInDto
 import org.android.go.sopt.presentation.main.MainActivity
@@ -19,8 +20,8 @@ class LoginViewModel: ViewModel() {
     val id = MutableLiveData("")
     val password = MutableLiveData("")
 
-    private val _signIn = MutableLiveData<ResponseSignInDto>()
-    val signIn: LiveData<ResponseSignInDto> get() = _signIn
+    private val _signIn = MutableLiveData<BaseResponseDto<ResponseSignInDto>>()
+    val signIn: LiveData<BaseResponseDto<ResponseSignInDto>> get() = _signIn
 
     fun onClickLogin(){
         signIn()
@@ -31,10 +32,10 @@ class LoginViewModel: ViewModel() {
             RequestSignInDto(
                 id.value.toString(), password.value.toString()
             )
-        ).enqueue(object : retrofit2.Callback<ResponseSignInDto> {
+        ).enqueue(object : retrofit2.Callback<BaseResponseDto<ResponseSignInDto>> {
             override fun onResponse(
-                call: Call<ResponseSignInDto>,
-                response: Response<ResponseSignInDto>
+                call: Call<BaseResponseDto<ResponseSignInDto>>,
+                response: Response<BaseResponseDto<ResponseSignInDto>>
             ) {
                 if (response.isSuccessful) {
                     SoptApplication.prefs.setBoolean(KEY_ISLOGIN, true)
@@ -44,7 +45,7 @@ class LoginViewModel: ViewModel() {
                 }
             }
 
-            override fun onFailure(call: Call<ResponseSignInDto>, t: Throwable) {
+            override fun onFailure(call: Call<BaseResponseDto<ResponseSignInDto>>, t: Throwable) {
                 Log.d("errrr", t.message.toString())
             }
         })
