@@ -1,6 +1,5 @@
 package org.android.go.sopt.presentation.login
 
-import android.content.Intent
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -11,8 +10,6 @@ import org.android.go.sopt.data.remote.ServicePool
 import org.android.go.sopt.data.remote.model.BaseResponseDto
 import org.android.go.sopt.data.remote.model.RequestSignInDto
 import org.android.go.sopt.data.remote.model.ResponseSignInDto
-import org.android.go.sopt.presentation.main.MainActivity
-import org.android.go.sopt.util.showShortToast
 import retrofit2.Call
 import retrofit2.Response
 
@@ -20,8 +17,8 @@ class LoginViewModel: ViewModel() {
     val id = MutableLiveData("")
     val password = MutableLiveData("")
 
-    private val _signIn = MutableLiveData<BaseResponseDto<ResponseSignInDto>>()
-    val signIn: LiveData<BaseResponseDto<ResponseSignInDto>> get() = _signIn
+    private val _signIn = MutableLiveData<Int>()
+    val signIn: LiveData<Int> get() = _signIn
 
     fun onClickLogin(){
         signIn()
@@ -39,7 +36,7 @@ class LoginViewModel: ViewModel() {
             ) {
                 if (response.isSuccessful) {
                     SoptApplication.prefs.setBoolean(KEY_ISLOGIN, true)
-                    _signIn.value = response.body()
+                    _signIn.value = response.body()?.status
                 } else {
                     Log.d("response err", response.body().toString())
                 }
@@ -49,6 +46,12 @@ class LoginViewModel: ViewModel() {
                 Log.d("errrr", t.message.toString())
             }
         })
+    }
+
+    fun autoLogin() {
+        if (SoptApplication.prefs.getBoolean(KEY_ISLOGIN, false)) {
+            _signIn.value = 200
+        }
     }
 
     companion object{

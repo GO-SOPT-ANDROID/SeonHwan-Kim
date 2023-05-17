@@ -40,7 +40,8 @@ class LoginActivity : AppCompatActivity() {
             hideKeyboard(binding.root)
         }
 
-        this.autoLogin()
+        viewModel.autoLogin()
+
         this.onClickLogin()
         this.onClickSignUp()
     }
@@ -48,7 +49,7 @@ class LoginActivity : AppCompatActivity() {
     private fun onClickLogin() {
         viewModel.onClickLogin()
         viewModel.signIn.observe(this){ data ->
-            when(data.status){
+            when(data){
                 200 -> navigateToMainActivity()
                 else -> showShortToast("id 또는 password가 일치하지 않습니다.")
             }
@@ -68,18 +69,5 @@ class LoginActivity : AppCompatActivity() {
             val intent = Intent(this, SignUpActivity::class.java)
             startActivity(intent)
         }
-    }
-
-    private fun autoLogin() {
-        if (SoptApplication.prefs.getBoolean(KEY_ISLOGIN, false)) {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            showShortToast(getString(R.string.login_success_login_msg))
-            if (!isFinishing) finish()
-        }
-    }
-
-    companion object {
-        private const val KEY_ISLOGIN = "isLogin"
     }
 }
