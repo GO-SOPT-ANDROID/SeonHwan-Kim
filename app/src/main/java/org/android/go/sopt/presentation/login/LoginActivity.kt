@@ -5,14 +5,16 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModel
 import org.android.go.sopt.R
 import org.android.go.sopt.presentation.main.MainActivity
 import org.android.go.sopt.presentation.signup.SignUpActivity
 import org.android.go.sopt.databinding.ActivityLoginBinding
 import org.android.go.sopt.SoptApplication
 import org.android.go.sopt.data.remote.ServicePool
-import org.android.go.sopt.data.remote.model.BaseResponseDto
 import org.android.go.sopt.data.remote.model.RequestSignInDto
 import org.android.go.sopt.data.remote.model.ResponseSignInDto
 import org.android.go.sopt.data.remote.service.SignInService
@@ -24,51 +26,41 @@ import retrofit2.Response
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
+    private val viewModel by viewModels<LoginViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityLoginBinding.inflate(layoutInflater)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
+        binding.vm = viewModel
+        binding.lifecycleOwner = this
+
         setContentView(binding.root)
 
         binding.root.setOnClickListener {
             hideKeyboard(binding.root)
         }
 
-        this.autoLogin()
+        viewModel.autoLogin()
+
         this.onClickLogin()
         this.onClickSignUp()
     }
 
     private fun onClickLogin() {
-        with(binding) {
-            btMainLogin.setOnClickListener {
-                ServicePool.signInService.signIn(
-                    RequestSignInDto(
-                        etMainId.text.toString(),
-                        etMainPassword.text.toString(),
-                    )
-                ).enqueue(object : retrofit2.Callback<BaseResponseDto<ResponseSignInDto>> {
-                    override fun onResponse(
-                        call: Call<BaseResponseDto<ResponseSignInDto>>,
-                        response: Response<BaseResponseDto<ResponseSignInDto>>
-                    ) {
-                        if (response.isSuccessful) {
-                            SoptApplication.prefs.setBoolean(KEY_ISLOGIN, true)
-                            val intent = Intent(this@LoginActivity, MainActivity::class.java)
-                            startActivity(intent)
-                            showShortToast(getString(R.string.login_success_login_msg))
-                            if (!isFinishing) finish()
-                        } else {
-                            response.body()?.message?.let { showShortToast(it) }
-                        }
-                    }
-
-                    override fun onFailure(call: Call<BaseResponseDto<ResponseSignInDto>>, t: Throwable) {
-                        t.message?.let { showShortToast(it) }
-                    }
-                })
+        viewModel.onClickLogin()
+        viewModel.signIn.observe(this){ data ->
+            when(data){
+                200 -> navigateToMainActivity()
+                else -> showShortToast("id 또는 password가 일치하지 않습니다.")
             }
         }
+    }
+
+    private fun navigateToMainActivity(){
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+        showShortToast("로그인 성공")
+        if(!isFinishing) finish()
     }
 
 
@@ -77,18 +69,5 @@ class LoginActivity : AppCompatActivity() {
             val intent = Intent(this, SignUpActivity::class.java)
             startActivity(intent)
         }
-    }
-
-    private fun autoLogin() {
-        if (SoptApplication.prefs.getBoolean(KEY_ISLOGIN, false)) {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            showShortToast(getString(R.string.login_success_login_msg))
-            if (!isFinishing) finish()
-        }
-    }
-
-    companion object {
-        private const val KEY_ISLOGIN = "isLogin"
     }
 }
