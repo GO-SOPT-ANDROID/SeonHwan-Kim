@@ -1,10 +1,9 @@
 package org.android.go.sopt.util
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.core.content.edit
-import org.android.go.sopt.data.User
+import org.android.go.sopt.data.local.User
 
 class UserSharedPreferences(context: Context) {
     private val prefs: SharedPreferences = context.getSharedPreferences(KEY_PREFS, 0)

@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import org.android.go.sopt.data.Dog
+import org.android.go.sopt.data.local.Dog
 import org.android.go.sopt.databinding.ItemDogBinding
 
 class DogAdapter(context: Context) : ListAdapter<Dog, DogAdapter.DogViewHolder>(DogDiffCallback()) {

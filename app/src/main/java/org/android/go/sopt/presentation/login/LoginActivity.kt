@@ -2,84 +2,72 @@ package org.android.go.sopt.presentation.login
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModel
 import org.android.go.sopt.R
 import org.android.go.sopt.presentation.main.MainActivity
 import org.android.go.sopt.presentation.signup.SignUpActivity
 import org.android.go.sopt.databinding.ActivityLoginBinding
 import org.android.go.sopt.SoptApplication
+import org.android.go.sopt.data.remote.ServicePool
+import org.android.go.sopt.data.remote.model.RequestSignInDto
+import org.android.go.sopt.data.remote.model.ResponseSignInDto
+import org.android.go.sopt.data.remote.service.SignInService
 import org.android.go.sopt.util.*
+import retrofit2.Call
+import retrofit2.Response
 
 
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
+    private val viewModel by viewModels<LoginViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityLoginBinding.inflate(layoutInflater)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
+        binding.vm = viewModel
+        binding.lifecycleOwner = this
+
         setContentView(binding.root)
 
         binding.root.setOnClickListener {
             hideKeyboard(binding.root)
         }
 
-        this.autoLogin()
+        viewModel.autoLogin()
+
         this.onClickLogin()
-        this.onCLickSignUp()
+        this.onClickSignUp()
     }
 
     private fun onClickLogin() {
-        with(binding) {
-            btMainLogin.setOnClickListener {
-                if (SoptApplication.prefs.getString(
-                        KEY_ID,
-                        null
-                    ) == etMainId.text.toString() && SoptApplication.prefs.getString(
-                        KEY_PASSWORD, null
-                    ) == etMainPassword.text.toString()
-                ) {
-                    val intent = Intent(this@LoginActivity, MainActivity::class.java)
-                    SoptApplication.prefs.setBoolean(KEY_ISLOGIN, true)
-                    startActivity(intent)
-                    showShortToast(getString(R.string.login_success_login_msg))
-                    if (!isFinishing) finish()
-                } else {
-                    showShortToast(getString(R.string.login_fail_login_msg))
-                }
+        viewModel.onClickLogin()
+        viewModel.signIn.observe(this){ data ->
+            when(data){
+                200 -> navigateToMainActivity()
+                else -> showShortToast("id 또는 password가 일치하지 않습니다.")
             }
         }
     }
 
-    private val getResultSignUp = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result: ActivityResult ->
-        if (result.resultCode == RESULT_OK) {
-            showShortSnackbar(binding.root, getString(R.string.login_success_sign_up_msg))
-        }
+    private fun navigateToMainActivity(){
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+        showShortToast("로그인 성공")
+        if(!isFinishing) finish()
     }
 
-    private fun onCLickSignUp() {
+
+    private fun onClickSignUp() {
         binding.btMainSignUp.setOnClickListener {
             val intent = Intent(this, SignUpActivity::class.java)
-            getResultSignUp.launch(intent)
-        }
-    }
-
-    private fun autoLogin() {
-        if (SoptApplication.prefs.getBoolean(KEY_ISLOGIN, false)) {
-            val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
-            showShortToast(getString(R.string.login_success_login_msg))
-            if (!isFinishing) finish()
         }
-    }
-
-    companion object {
-        private const val KEY_ISLOGIN = "isLogin"
-        private const val KEY_ID = "id"
-        private const val KEY_PASSWORD = "password"
     }
 }

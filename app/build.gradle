@@ -2,7 +2,12 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-parcelize'
+    id 'kotlin-kapt'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.7.21'
 }
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
 android {
     namespace 'org.android.go.sopt'
@@ -20,6 +25,13 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        // BASE URL 불러오기
+        buildConfigField "String", "BASE_URL", properties['BASE_URL']
+
+        // kakao url, auth 불러오기
+        buildConfigField "String", "KAKAO_BASE_URL", properties['KAKAO_BASE_URL']
+        buildConfigField "String", "KAKAO_AUTH_HEADER", properties['KAKAO_AUTH_HEADER']
     }
 
     buildTypes {
@@ -37,6 +49,7 @@ android {
     }
     buildFeatures {
         viewBinding true
+        dataBinding true
     }
 }
 
@@ -59,4 +72,19 @@ dependencies {
     // ViewModel 생성함수를 편하게 사용하고 싶다면?
     implementation "androidx.fragment:fragment-ktx:1.5.7"
     implementation "androidx.activity:activity-ktx:1.7.1"
+
+    // 서버 통신
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1'
+    implementation 'com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0'
+    // define a BOM and its version
+    implementation(platform("com.squareup.okhttp3:okhttp-bom:4.10.0"))
+
+    // define any required OkHttp artifacts without version (BOM을 위에 명시했으니, 밑의 버전들은 BOM에 맞게 적용됩니다.)
+    implementation("com.squareup.okhttp3:okhttp")
+    implementation("com.squareup.okhttp3:logging-interceptor")
+
+    // 이미지 불러오는 라이브러리 Glide
+    implementation 'com.github.bumptech.glide:glide:4.12.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
 }
