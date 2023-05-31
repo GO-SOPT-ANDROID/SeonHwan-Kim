@@ -1,4 +1,4 @@
-package org.android.go.sopt.data.remote.model
+package org.android.go.sopt.data.model.response
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -8,7 +8,7 @@ data class ResponseKakaoSearchDto(
     @SerialName("documents")
     val documents: List<Document>,
     @SerialName("meta")
-    val meta: Meta
+    val meta: Meta,
 ) {
     @Serializable
     data class Document(
@@ -23,7 +23,7 @@ data class ResponseKakaoSearchDto(
         @SerialName("title")
         val title: String,
         @SerialName("url")
-        val url: String
+        val url: String,
     )
 
     @Serializable
@@ -33,6 +33,6 @@ data class ResponseKakaoSearchDto(
         @SerialName("pageable_count")
         val pageable_count: Int,
         @SerialName("total_count")
-        val total_count: Int
+        val total_count: Int,
     )
 }
