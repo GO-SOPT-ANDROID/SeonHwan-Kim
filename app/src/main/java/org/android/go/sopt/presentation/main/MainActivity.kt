@@ -1,8 +1,9 @@
 package org.android.go.sopt.presentation.main
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import dagger.hilt.android.AndroidEntryPoint
 import org.android.go.sopt.R
 import org.android.go.sopt.databinding.ActivityMainBinding
 import org.android.go.sopt.presentation.main.gallery.GalleryFragment
@@ -10,7 +11,7 @@ import org.android.go.sopt.presentation.main.home.HomeFragment
 import org.android.go.sopt.presentation.main.mypage.MyPageFragment
 import org.android.go.sopt.presentation.main.search.SearchFragment
 
-
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,8 +23,6 @@ class MainActivity : AppCompatActivity() {
         this.goToTop()
     }
 
-
-
     private fun initLayout() {
         val currentFragment = supportFragmentManager.findFragmentById(R.id.fcv_main)
         if (currentFragment == null) {
@@ -34,12 +33,15 @@ class MainActivity : AppCompatActivity() {
                 R.id.menu_home -> {
                     this.changeFragment(HomeFragment())
                 }
+
                 R.id.menu_search -> {
                     this.changeFragment(SearchFragment())
                 }
+
                 R.id.menu_gallery -> {
                     this.changeFragment(GalleryFragment())
                 }
+
                 else -> {
                     this.changeFragment(MyPageFragment())
                 }
@@ -48,20 +50,16 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
     private fun changeFragment(fragment: Fragment) {
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.fcv_main, fragment)
-            .commit()
+        supportFragmentManager.beginTransaction().replace(R.id.fcv_main, fragment).commit()
     }
 
-    private fun goToTop(){
+    private fun goToTop() {
         binding.bnvMain.setOnItemReselectedListener {
-            when(it.itemId){
+            when (it.itemId) {
                 R.id.menu_home -> {
                     val currentFragment = supportFragmentManager.findFragmentById(R.id.fcv_main)
-                    if(currentFragment is HomeFragment){
+                    if (currentFragment is HomeFragment) {
                         currentFragment.scrollToTop()
                     }
                 }
