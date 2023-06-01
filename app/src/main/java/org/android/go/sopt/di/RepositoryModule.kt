@@ -6,8 +6,10 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import org.android.go.sopt.data.repository.AuthRepositoryImpl
 import org.android.go.sopt.data.repository.HomeUserRepositoryImpl
+import org.android.go.sopt.data.repository.KakaoSearchRepositoryImpl
 import org.android.go.sopt.domain.repository.AuthRepository
 import org.android.go.sopt.domain.repository.HomeUserReponsitory
+import org.android.go.sopt.domain.repository.KakaoSearchRepository
 import javax.inject.Singleton
 
 @Module
@@ -24,4 +26,10 @@ abstract class RepositoryModule {
     abstract fun bindsHomeUserRepository(
         homeUserRepositoryImpl: HomeUserRepositoryImpl,
     ): HomeUserReponsitory
+
+    @Binds
+    @Singleton
+    abstract fun bindsKakaoSearchRepository(
+        kakaoSearchRepositoryImpl: KakaoSearchRepositoryImpl,
+    ): KakaoSearchRepository
 }
