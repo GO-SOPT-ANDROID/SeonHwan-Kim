@@ -2,37 +2,26 @@ package org.android.go.sopt.presentation.login
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import org.android.go.sopt.R
+import org.android.go.sopt.databinding.ActivityLoginBinding
 import org.android.go.sopt.presentation.main.MainActivity
 import org.android.go.sopt.presentation.signup.SignUpActivity
-import org.android.go.sopt.databinding.ActivityLoginBinding
-import org.android.go.sopt.SoptApplication
-import org.android.go.sopt.data.remote.ServicePool
-import org.android.go.sopt.data.remote.model.RequestSignInDto
-import org.android.go.sopt.data.remote.model.ResponseSignInDto
-import org.android.go.sopt.data.remote.service.SignInService
-import org.android.go.sopt.util.*
-import retrofit2.Call
-import retrofit2.Response
+import org.android.go.sopt.util.binding.BindingActivity
+import org.android.go.sopt.util.extension.hideKeyboard
+import org.android.go.sopt.util.extension.showShortToast
+import org.android.go.sopt.util.state.UiState.Error
+import org.android.go.sopt.util.state.UiState.Failure
+import org.android.go.sopt.util.state.UiState.Success
 
-
-class LoginActivity : AppCompatActivity() {
-
-    private lateinit var binding: ActivityLoginBinding
+@AndroidEntryPoint
+class LoginActivity : BindingActivity<ActivityLoginBinding>(R.layout.activity_login) {
     private val viewModel by viewModels<LoginViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
         binding.vm = viewModel
-        binding.lifecycleOwner = this
 
         setContentView(binding.root)
 
@@ -47,22 +36,29 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun onClickLogin() {
-        viewModel.onClickLogin()
-        viewModel.signIn.observe(this){ data ->
-            when(data){
-                200 -> navigateToMainActivity()
-                else -> showShortToast("id 또는 password가 일치하지 않습니다.")
+        viewModel.signInState.observe(this) { state ->
+            when (state) {
+                is Success -> {
+                    navigateToMainActivity()
+                }
+
+                is Failure -> {
+                    showShortToast("아이디 혹은 비밀번호가 잘못되었습니다")
+                }
+
+                is Error -> {
+                    showShortToast("문제가 발생하였습니다")
+                }
             }
         }
     }
 
-    private fun navigateToMainActivity(){
+    private fun navigateToMainActivity() {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
         showShortToast("로그인 성공")
-        if(!isFinishing) finish()
+        if (!isFinishing) finish()
     }
-
 
     private fun onClickSignUp() {
         binding.btMainSignUp.setOnClickListener {
