@@ -1,72 +1,38 @@
 package org.android.go.sopt.presentation.signup
 
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
+import androidx.activity.viewModels
 import androidx.core.widget.doAfterTextChanged
+import dagger.hilt.android.AndroidEntryPoint
 import org.android.go.sopt.R
-import org.android.go.sopt.data.local.User
 import org.android.go.sopt.databinding.ActivitySignUpBinding
-import org.android.go.sopt.SoptApplication
-import org.android.go.sopt.data.remote.ServicePool
-import org.android.go.sopt.data.remote.model.BaseResponseDto
-import org.android.go.sopt.data.remote.model.RequestSignUpDto
-import org.android.go.sopt.data.remote.model.ResponseSignUpDto
-import org.android.go.sopt.presentation.login.LoginActivity
-import org.android.go.sopt.util.hideKeyboard
-import org.android.go.sopt.util.showShortToast
-import retrofit2.Call
-import retrofit2.Response
+import org.android.go.sopt.util.binding.BindingActivity
+import org.android.go.sopt.util.extension.showShortToast
+import org.android.go.sopt.util.state.UiState.Failure
+import org.android.go.sopt.util.state.UiState.Success
+import org.android.go.sopt.util.state.UiState.Error
 
-class SignUpActivity : AppCompatActivity() {
-
-    private lateinit var binding: ActivitySignUpBinding
-
+@AndroidEntryPoint
+class SignUpActivity : BindingActivity<ActivitySignUpBinding>(R.layout.activity_sign_up) {
+    private val viewModel by viewModels<SignUpViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivitySignUpBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.vm = viewModel
 
-        binding.root.setOnClickListener {
-            hideKeyboard(binding.root)
-        }
-
+        signUp()
         this.signUpBtnEnabled()
-        this.onClickComplete()
     }
 
-    private fun onClickComplete() {
-        with(binding) {
-            btSignupComplete.setOnClickListener {
-                ServicePool.signUpService.signUp(
-                    RequestSignUpDto(
-                        etSignupId.text.toString(),
-                        etSignupPassword.text.toString(),
-                        etSignupName.text.toString(),
-                        etSignupSpecialty.text.toString()
-                    )
-                ).enqueue(object : retrofit2.Callback<BaseResponseDto<ResponseSignUpDto>> {
-                    override fun onResponse(
-                        call: Call<BaseResponseDto<ResponseSignUpDto>>, response: Response<BaseResponseDto<ResponseSignUpDto>>
-                    ) {
-                        if (response.isSuccessful) {
-                            response.body()?.message?.let { showShortToast(it) }
-                                ?: getString(R.string.login_success_sign_up_msg)
-                            val intent = Intent(this@SignUpActivity, LoginActivity::class.java)
-                            startActivity(intent)
-                            if (!isFinishing) finish()
-                        } else {
-                            response.body()?.message?.let { showShortToast(it) }
-                        }
-                    }
-
-                    override fun onFailure(call: Call<BaseResponseDto<ResponseSignUpDto>>, t: Throwable) {
-                        t.message?.let { showShortToast(it) }
-                    }
-
-                })
+    private fun signUp() {
+        viewModel.signUpState.observe(this) { state ->
+            when (state) {
+                is Success -> {
+                    if (!isFinishing) finish()
+                    showShortToast("회원가입을 완료하였습니다")
+                }
+                is Failure -> showShortToast("필수 정보를 입력해주세요")
+                is Error -> showShortToast("문제가 발생하였습니다")
             }
         }
     }
@@ -84,9 +50,9 @@ class SignUpActivity : AppCompatActivity() {
     private fun isAllConditionSatisfy(): Boolean {
         with(binding) {
             return etSignupId.text.length in 6..10 &&
-                    etSignupPassword.text.length in 8..12 &&
-                    etSignupName.text.isNotBlank() &&
-                    etSignupSpecialty.text.isNotBlank()
+                etSignupPassword.text.length in 8..12 &&
+                etSignupName.text.isNotBlank() &&
+                etSignupSpecialty.text.isNotBlank()
         }
     }
 }
