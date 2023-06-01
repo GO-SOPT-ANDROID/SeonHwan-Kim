@@ -21,7 +21,7 @@ object ServiceModule {
 
     @Provides
     @Singleton
-    fun providesHomeUserService(@RetrofitModule.Retrofit2(BaseUrlType.SOPT) retrofit: Retrofit): HomeUserService =
+    fun providesHomeUserService(@RetrofitModule.Retrofit2(BaseUrlType.REQRES) retrofit: Retrofit): HomeUserService =
         retrofit.create(HomeUserService::class.java)
 
     @Provides
