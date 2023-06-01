@@ -2,6 +2,7 @@ package org.android.go.sopt.data.model.response
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import org.android.go.sopt.domain.entity.KakaoSearch
 
 @Serializable
 data class ResponseKakaoSearchDto(
@@ -24,7 +25,13 @@ data class ResponseKakaoSearchDto(
         val title: String,
         @SerialName("url")
         val url: String,
-    )
+    ) {
+        fun toKakaoSearchEntity() = KakaoSearch(
+            thumbnail = thumbnail,
+            title = title,
+            author = author,
+        )
+    }
 
     @Serializable
     data class Meta(
