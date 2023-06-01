@@ -1,66 +1,55 @@
 package org.android.go.sopt.presentation.main.gallery
 
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import org.android.go.sopt.data.remote.ServicePool
-import org.android.go.sopt.data.remote.model.ResponseHomeUserDto
+import androidx.fragment.app.viewModels
+import dagger.hilt.android.AndroidEntryPoint
+import org.android.go.sopt.R
 import org.android.go.sopt.databinding.FragmentGalleryBinding
-import org.android.go.sopt.util.showShortToast
-import retrofit2.Call
-import retrofit2.Response
+import org.android.go.sopt.util.binding.BindingFragment
+import org.android.go.sopt.util.extension.showShortToast
+import org.android.go.sopt.util.state.UiState.Error
+import org.android.go.sopt.util.state.UiState.Failure
+import org.android.go.sopt.util.state.UiState.Success
 
-class GalleryFragment : Fragment() {
-    private var _binding: FragmentGalleryBinding? = null
-    private val binding: FragmentGalleryBinding
-        get() = requireNotNull(_binding) { "앗!_binding이 null이다!" }
-
-    private val homeUserService = ServicePool.getHomeUserService
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentGalleryBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+@AndroidEntryPoint
+class GalleryFragment : BindingFragment<FragmentGalleryBinding>(R.layout.fragment_gallery) {
+    private val viewModel by viewModels<GalleryViewModel>()
+    private var pagerAdapter: PagerAdapter? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        this.getUserData()
+        initAdapter()
+        getUserData()
     }
 
-    override fun onDestroyView() {
-        _binding = null
-        super.onDestroyView()
+    private fun initAdapter() {
+        pagerAdapter = PagerAdapter()
+
+        binding.pagerGallery.adapter = pagerAdapter
     }
 
     private fun getUserData() {
-        homeUserService.GetHomeUserData().enqueue(object : retrofit2.Callback<ResponseHomeUserDto> {
-            override fun onResponse(
-                call: Call<ResponseHomeUserDto>,
-                response: Response<ResponseHomeUserDto>
-            ) {
-                if (response.isSuccessful) {
-                    Log.d("---------------\n", response.body()?.data.toString())
-                    binding.pagerGallery.adapter = PagerAdapter().apply {
-                        submitList(response.body()?.data)
-                    }
-                    requireActivity().showShortToast("성공")
-                } else {
-                    Log.d("----------------------\n", response.message())
-                    requireActivity().showShortToast("실패")
+        viewModel.userListState.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is Success -> {
+                    pagerAdapter?.submitList(viewModel.userList.value)
+                }
+
+                is Failure -> {
+                    requireActivity().showShortToast("failure")
+                }
+
+                is Error -> {
+                    requireActivity().showShortToast("error")
                 }
             }
+        }
+    }
 
-            override fun onFailure(call: Call<ResponseHomeUserDto>, t: Throwable) {
-                Log.d("-----------------------\n", t.toString())
-            }
-        })
+    override fun onDestroyView() {
+        super.onDestroyView()
+        pagerAdapter = null
     }
 }
