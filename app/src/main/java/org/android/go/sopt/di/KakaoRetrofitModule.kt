@@ -27,48 +27,40 @@ object KakaoRetrofitModule {
     @Provides
     @Singleton
     @Retrofit2(BaseUrlType.KAKAO)
-    fun providesKakaoInterceptor(): Interceptor =
-        Interceptor { chain ->
-            with(chain) {
-                proceed(
-                    request()
-                        .newBuilder()
-                        .addHeader(CONTENT_TYPE, APPLICATION_JSON)
-                        .addHeader(AUTHORIZATION, BuildConfig.KAKAO_AUTH_HEADER)
-                        .build(),
-                )
-            }
+    fun providesKakaoInterceptor(): Interceptor = Interceptor { chain ->
+        with(chain) {
+            proceed(
+                request().newBuilder().addHeader(CONTENT_TYPE, APPLICATION_JSON)
+                    .addHeader(AUTHORIZATION, BuildConfig.KAKAO_AUTH_HEADER).build(),
+            )
         }
+    }
 
     @Provides
     @Singleton
     @Retrofit2(BaseUrlType.KAKAO)
     fun providesOkHttpClient(
         @Retrofit2(BaseUrlType.KAKAO) interceptor: Interceptor,
-    ): OkHttpClient =
-        OkHttpClient.Builder()
-            .connectTimeout(15, TimeUnit.SECONDS)
-            .writeTimeout(20, TimeUnit.SECONDS)
-            .readTimeout(15, TimeUnit.SECONDS)
-            .addInterceptor(interceptor)
-            .addInterceptor(
-                HttpLoggingInterceptor().apply {
-                    level = HttpLoggingInterceptor.Level.BODY
-                },
-            )
-            .build()
+    ): OkHttpClient = OkHttpClient.Builder().connectTimeout(15, TimeUnit.SECONDS)
+        .writeTimeout(20, TimeUnit.SECONDS).readTimeout(15, TimeUnit.SECONDS)
+        .addInterceptor(interceptor).addInterceptor(
+            HttpLoggingInterceptor().apply {
+                level = HttpLoggingInterceptor.Level.BODY
+            },
+        ).build()
 
     @Provides
     @Singleton
     @RetrofitModule.Retrofit2(BaseUrlType.KAKAO)
     fun providesKakaoRetrofit(
         @Retrofit2(BaseUrlType.KAKAO) client: OkHttpClient,
-    ): Retrofit =
-        Retrofit.Builder()
-            .baseUrl(BuildConfig.KAKAO_BASE_URL)
-            .addConverterFactory(Json.asConverterFactory(APPLICATION_JSON.toMediaType()))
+    ): Retrofit {
+        val json = Json { ignoreUnknownKeys = true }
+        return Retrofit.Builder().baseUrl(BuildConfig.KAKAO_BASE_URL)
+            .addConverterFactory(json.asConverterFactory(APPLICATION_JSON.toMediaType()))
             .client(client)
             .build()
+    }
 
     @Qualifier
     annotation class Retrofit2(val baseUrlType: BaseUrlType)
