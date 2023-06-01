@@ -11,7 +11,6 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.android.go.sopt.BuildConfig.BASE_URL
-import org.android.go.sopt.BuildConfig.KAKAO_AUTH_HEADER
 import org.android.go.sopt.util.type.BaseUrlType
 import retrofit2.Retrofit
 import java.util.concurrent.TimeUnit
@@ -34,21 +33,6 @@ object RetrofitModule {
                     request()
                         .newBuilder()
                         .addHeader(CONTENT_TYPE, APPLICATION_JSON)
-                        .build(),
-                )
-            }
-        }
-
-    @Provides
-    @Singleton
-    fun providesKakaoInterceptor(): Interceptor =
-        Interceptor { chain ->
-            with(chain) {
-                proceed(
-                    request()
-                        .newBuilder()
-                        .addHeader(CONTENT_TYPE, APPLICATION_JSON)
-                        .addHeader(AUTHORIZATION, KAKAO_AUTH_HEADER)
                         .build(),
                 )
             }
