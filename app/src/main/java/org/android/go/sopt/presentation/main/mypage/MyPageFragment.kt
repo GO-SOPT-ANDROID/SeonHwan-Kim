@@ -1,7 +1,6 @@
 package org.android.go.sopt.presentation.main.mypage
 
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -11,7 +10,7 @@ import android.view.ViewGroup
 import org.android.go.sopt.databinding.FragmentMyPageBinding
 import org.android.go.sopt.SoptApplication
 import org.android.go.sopt.presentation.login.LoginActivity
-import org.android.go.sopt.util.showShortToast
+import org.android.go.sopt.util.extension.showShortToast
 
 class MyPageFragment : Fragment() {
     private var _binding: FragmentMyPageBinding? = null
