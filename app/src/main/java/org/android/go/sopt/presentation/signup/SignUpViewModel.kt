@@ -3,6 +3,7 @@ package org.android.go.sopt.presentation.signup
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -29,6 +30,12 @@ class SignUpViewModel @Inject constructor(
     val signUpState: LiveData<UiState>
         get() = _signUpState
 
+    val isValidId: LiveData<Boolean> = id.map { id -> checkIdInvalid(id) }
+    val isValidPassword: LiveData<Boolean> =
+        password.map { password -> checkPasswordInvalid(password) }
+    val isValidName: LiveData<Boolean> = name.map { name -> name.isNotEmpty() }
+    val isValidSkill: LiveData<Boolean> = skill.map { skill -> skill.isNotEmpty() }
+
     fun onClickSignUp() {
         viewModelScope.launch {
             authRepository.signUp(
@@ -49,5 +56,16 @@ class SignUpViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun checkIdInvalid(id: String) = id.matches(ID_PATTERN)
+
+    private fun checkPasswordInvalid(password: String) =
+        password.matches(PASSWORD_PATTERN)
+
+    companion object {
+        val ID_PATTERN = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z0-9]{6,10}\$".toRegex()
+        val PASSWORD_PATTERN =
+            "^(?=.*[a-zA-Z])(?=.*[!@#\$%^&*()])(?=.*[0-9])[a-zA-Z!@#\$%^&*()0-9]{6,12}\$".toRegex()
     }
 }
